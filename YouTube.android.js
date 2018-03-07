@@ -57,6 +57,7 @@ export default class YouTube extends React.Component {
 
   constructor(props) {
     super(props);
+    this.mounted = false;
 
     this.state = {
       moduleMargin: StyleSheet.hairlineWidth * 2,
@@ -65,12 +66,13 @@ export default class YouTube extends React.Component {
   }
 
   componentWillMount() {
+    this.mounted = true;
     BackHandler.addEventListener('hardwareBackPress', this._backPress);
 
     // Periodically triggeting a forced unnoticable layout rendering until onReady to make sure the
     // native loading progress is shown
     this._interval = setInterval(() => {
-      this.setState({ moduleMargin: Math.random() / 2 });
+      if (this.mounted) this.setState({ moduleMargin: Math.random() / 2 });
     }, 250);
   }
 
@@ -82,6 +84,7 @@ export default class YouTube extends React.Component {
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     BackHandler.removeEventListener('hardwareBackPress', this._backPress);
   }
 
